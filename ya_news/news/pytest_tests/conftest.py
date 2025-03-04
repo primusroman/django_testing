@@ -1,12 +1,13 @@
-import pytest
 from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test.client import Client
+from django.urls import reverse
 from django.utils import timezone
+import pytest
 
-from news.models import News, Comment
+from news.models import Comment, News
 
 User = get_user_model()
 
@@ -44,11 +45,6 @@ def news():
 
 
 @pytest.fixture
-def news_id(news):
-    return (news.id,)
-
-
-@pytest.fixture
 def comment(author, news):
     comment = Comment.objects.create(
         news=news,
@@ -59,22 +55,54 @@ def comment(author, news):
 
 
 @pytest.fixture
-def comment_id(comment):
-    return (comment.id,)
+def homepage_url():
+    return reverse('news:home')
+
+
+@pytest.fixture
+def page_login_url():
+    return reverse('users:login')
+
+
+@pytest.fixture
+def page_logout_url():
+    return reverse('users:logout')
+
+
+@pytest.fixture
+def page_signup_url():
+    return reverse('users:signup')
+
+
+@pytest.fixture
+def delete_url(news):
+    return reverse('news:delete', args=(news.id,))
+
+
+@pytest.fixture
+def detail_url(news):
+    return reverse('news:detail', args=(news.id,))
+
+
+@pytest.fixture
+def delete_comment_url(comment):
+    return reverse('news:delete', args=(comment.id,))
+
+
+@pytest.fixture
+def edit_comment_url(comment):
+    return reverse('news:edit', args=(comment.id,))
 
 
 @pytest.fixture
 def all_news():
     today = datetime.today()
-    all_news = [
-        News(
-            title=f'Новость {index}',
-            text='Просто текст.',
-            date=today - timedelta(days=index)
-        )
-        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
-    ]
-    return News.objects.bulk_create(all_news)
+    return News.objects.bulk_create(News(
+        title=f'Новость {index}',
+        text='Просто текст.',
+        date=today - timedelta(days=index)
+    )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1))
 
 
 @pytest.fixture
@@ -86,10 +114,3 @@ def create_comment(author, news):
         )
         comment.created = now + timedelta(days=index)
         comment.save()
-
-
-@pytest.fixture
-def form_data():
-    return {
-        'text': 'Новый текст коммента'
-    }
