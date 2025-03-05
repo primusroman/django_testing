@@ -32,8 +32,6 @@ class NotesListViewTest(TestCase):
             author=cls.author
         )
 
-        cls.NOTE = (cls.note.slug,)
-
         cls.HOMEPAGE_URL = reverse('notes:home')
         cls.PAGE_LOGIN_URL = reverse('users:login')
         cls.PAGE_LOGOUT_URL = reverse('users:logout')
@@ -41,17 +39,12 @@ class NotesListViewTest(TestCase):
         cls.PAGE_ADD_URL = reverse('notes:add')
         cls.PAGE_LIST_URL = reverse('notes:list')
         cls.PAGE_SUCCESS_URL = reverse('notes:success')
-        cls.PAGE_EDIT_URL = reverse('notes:edit', args=cls.NOTE)
-        cls.PAGE_DETAIL_URL = reverse('notes:detail', args=cls.NOTE)
-        cls.PAGE_DELETE_URL = reverse('notes:delete', args=cls.NOTE)
+        cls.PAGE_EDIT_URL = reverse('notes:edit', args=(cls.note.slug,))
+        cls.PAGE_DETAIL_URL = reverse('notes:detail', args=(cls.note.slug,))
+        cls.PAGE_DELETE_URL = reverse('notes:delete', args=(cls.note.slug,))
 
-        cls.data = {
+        cls.form_data = {
             'title': 'Test Title',
             'text': 'Test content',
             'slug': 'sluggg'
-        }
-
-        cls.data_without_slug = {
-            'title': 'Тестовая заметка',
-            'text': 'Это текст тестовой заметки.'
         }

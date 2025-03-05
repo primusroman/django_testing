@@ -7,19 +7,18 @@ class NotesListViewTestq(NotesListViewTest):
     def test_notes_list_view_context(self):
         """Проверяем, что заметки передаются в контексте object_list."""
         response = self.author_client.get(self.PAGE_LIST_URL)
-        notes_in_context = list(response.context['object_list'])
-        self.assertIn(self.note, notes_in_context)
-
-        self.assertEqual(notes_in_context[0].title, self.note.title)
-        self.assertEqual(notes_in_context[0].text, self.note.text)
-        self.assertEqual(notes_in_context[0].author, self.note.author)
-        self.assertEqual(notes_in_context[0].slug, self.note.slug)
+        note = response.context['object_list']
+        self.assertIn(self.note, note)
+        self.assertEqual(note[0].title, self.note.title)
+        self.assertEqual(note[0].text, self.note.text)
+        self.assertEqual(note[0].author, self.note.author)
+        self.assertEqual(note[0].slug, self.note.slug)
 
     def test_another_user_note(self):
         """Проверяем отсутствие заметок другого пользователя."""
         response = self.reader_client.get(self.PAGE_LIST_URL)
         self.assertNotIn(self.note,
-                         list(response.context['object_list'])
+                         response.context['object_list']
                          )
 
     def test_create_and_update_note_form(self):

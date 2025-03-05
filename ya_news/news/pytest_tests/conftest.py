@@ -85,13 +85,28 @@ def detail_url(news):
 
 
 @pytest.fixture
+def detail_url_with_comments(detail_url):
+    return f'{detail_url}#comments'
+
+
+@pytest.fixture
 def delete_comment_url(comment):
     return reverse('news:delete', args=(comment.id,))
 
 
 @pytest.fixture
+def redirect_delete_url(page_login_url, delete_comment_url):
+    return f'{page_login_url}?next={delete_comment_url}'
+
+
+@pytest.fixture
 def edit_comment_url(comment):
     return reverse('news:edit', args=(comment.id,))
+
+
+@pytest.fixture
+def redirect_edit_url(page_login_url, edit_comment_url):
+    return f'{page_login_url}?next={edit_comment_url}'
 
 
 @pytest.fixture
@@ -106,7 +121,7 @@ def all_news():
 
 
 @pytest.fixture
-def create_comment(author, news):
+def comments(author, news):
     now = timezone.now()
     for index in range(10):
         comment = Comment.objects.create(

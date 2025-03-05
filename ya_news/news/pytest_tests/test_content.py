@@ -20,11 +20,10 @@ def test_news_order(client, all_news, homepage_url):
     )
 
 
-def test_comments_order(client, create_comment, detail_url):
+def test_comments_order(client, comments, detail_url):
     news = client.get(detail_url).context['news']
-    assert [comment.created for comment in news.comment_set.all()] == sorted(
-        [comment.created for comment in news.comment_set.all()]
-    )
+    comments_date = [comment.created for comment in news.comment_set.all()]
+    assert comments_date == sorted(comments_date)
 
 
 def test_anonymous_client_has_no_form(client, detail_url):

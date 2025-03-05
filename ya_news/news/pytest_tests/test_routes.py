@@ -14,57 +14,65 @@ PAGE_SIGNUP_URL = lazy_fixture('page_signup_url')
 DETAIL_URL = lazy_fixture('detail_url')
 EDIT_COMMENT_URL = lazy_fixture('edit_comment_url')
 DELETE_COMMENT_URL = lazy_fixture('delete_comment_url')
+NOT_AUTHOR_CLIENT = lazy_fixture('not_author_client')
+AUTHOR_CLIENT = lazy_fixture('author_client')
+CLIENT = lazy_fixture('client')
+REDIRECT_EDIT_URL = lazy_fixture('redirect_edit_url')
+REDIRECT_DELETE_URL = lazy_fixture('redirect_delete_url')
 
 
 @pytest.mark.parametrize(
     'url, parametrized_client, expected_status',
     (
-        (EDIT_COMMENT_URL, lazy_fixture('not_author_client'),
+        (EDIT_COMMENT_URL, NOT_AUTHOR_CLIENT,
          HTTPStatus.NOT_FOUND
          ),
-        (EDIT_COMMENT_URL, lazy_fixture('author_client'),
+        (EDIT_COMMENT_URL, AUTHOR_CLIENT,
          HTTPStatus.OK
          ),
-        (DELETE_COMMENT_URL, lazy_fixture('not_author_client'),
+        (DELETE_COMMENT_URL, NOT_AUTHOR_CLIENT,
          HTTPStatus.NOT_FOUND
          ),
-        (DELETE_COMMENT_URL, lazy_fixture('author_client'),
+        (DELETE_COMMENT_URL, AUTHOR_CLIENT,
          HTTPStatus.OK
          ),
-        (HOMEPAGE_URL, lazy_fixture('client'),
+        (HOMEPAGE_URL, CLIENT,
          HTTPStatus.OK
          ),
-        (PAGE_LOGIN_URL, lazy_fixture('client'),
+        (PAGE_LOGIN_URL, CLIENT,
          HTTPStatus.OK
          ),
-        (PAGE_LOGOUT_URL, lazy_fixture('client'),
+        (PAGE_LOGOUT_URL, CLIENT,
          HTTPStatus.OK
          ),
-        (PAGE_SIGNUP_URL, lazy_fixture('client'),
+        (PAGE_SIGNUP_URL, CLIENT,
          HTTPStatus.OK
          ),
-        (DETAIL_URL, lazy_fixture('client'),
+        (DETAIL_URL, CLIENT,
          HTTPStatus.OK
-         )
+         ),
+        (EDIT_COMMENT_URL, CLIENT,
+         HTTPStatus.FOUND
+         ),
+        (DELETE_COMMENT_URL, CLIENT,
+         HTTPStatus.FOUND
+         ),
     ),
 )
 def test_pages_availability_for_different_users(
         parametrized_client, url, expected_status
 ):
-    response = parametrized_client.get(url)
-    assert response.status_code == expected_status
+    assert parametrized_client.get(url).status_code == expected_status
 
 
 @pytest.mark.parametrize(
-    'url',
+    'url, expected_url',
     (
-        (EDIT_COMMENT_URL),
-        (DELETE_COMMENT_URL),
+        (EDIT_COMMENT_URL, REDIRECT_EDIT_URL),
+        (DELETE_COMMENT_URL, REDIRECT_DELETE_URL),
     ),
 )
 def test_redirects(
-    client, url, page_login_url
+    client, url, expected_url
 ):
-    expected_url = f'{page_login_url}?next={url}'
-    response = client.get(url)
-    assertRedirects(response, expected_url)
+    assertRedirects(client.get(url), expected_url)

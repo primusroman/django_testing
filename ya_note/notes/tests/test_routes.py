@@ -26,6 +26,12 @@ class TestRoutes(NotesListViewTest):
             (self.PAGE_DETAIL_URL, self.reader_client, HTTPStatus.NOT_FOUND),
             (self.PAGE_DELETE_URL, self.reader_client, HTTPStatus.NOT_FOUND),
             (self.PAGE_EDIT_URL, self.reader_client, HTTPStatus.NOT_FOUND),
+            (self.PAGE_ADD_URL, self.client, HTTPStatus.FOUND),
+            (self.PAGE_SUCCESS_URL, self.client, HTTPStatus.FOUND),
+            (self.PAGE_LIST_URL, self.client, HTTPStatus.FOUND),
+            (self.PAGE_DETAIL_URL, self.client, HTTPStatus.FOUND),
+            (self.PAGE_DELETE_URL, self.client, HTTPStatus.FOUND),
+            (self.PAGE_EDIT_URL, self.client, HTTPStatus.FOUND),
         )
 
         for url, user, status in status_check_cases:
@@ -34,11 +40,34 @@ class TestRoutes(NotesListViewTest):
 
     def test_redirect_for_anonymous_client(self):
         """Тест перенаправления анонимного пользователя на страницу логина."""
-        for url in (
-            self.PAGE_ADD_URL, self.PAGE_EDIT_URL,
-            self.PAGE_EDIT_URL, self.PAGE_DELETE_URL,
-            self.PAGE_LIST_URL, self.PAGE_DETAIL_URL
-        ):
+        login_url = self.PAGE_LOGIN_URL
+        redirect_cases = (
+            (
+                self.PAGE_ADD_URL,
+                f'{login_url}?next={self.PAGE_ADD_URL}'
+            ),
+            (
+                self.PAGE_EDIT_URL,
+                f'{login_url}?next={self.PAGE_EDIT_URL}'
+            ),
+            (
+                self.PAGE_DELETE_URL,
+                f'{login_url}?next={self.PAGE_DELETE_URL}'
+            ),
+            (
+                self.PAGE_LIST_URL,
+                f'{login_url}?next={self.PAGE_LIST_URL}'
+            ),
+            (
+                self.PAGE_DETAIL_URL,
+                f'{login_url}?next={self.PAGE_DETAIL_URL}'
+            ),
+            (
+                self.PAGE_SUCCESS_URL,
+                f'{login_url}?next={self.PAGE_SUCCESS_URL}'
+            ),
+        )
+        for url, expected_redirect_url in redirect_cases:
             with self.subTest(url=url):
                 response = self.client.get(url)
-                self.assertRedirects(response, response.url)
+                self.assertRedirects(response, expected_redirect_url)
