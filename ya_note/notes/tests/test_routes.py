@@ -13,25 +13,25 @@ class TestRoutes(NotesListViewTest):
     def test_page_availability(self):
         """Тест доступности страниц."""
         status_check_cases = (
-            (self.HOMEPAGE_URL, self.client, HTTPStatus.OK),
-            (self.PAGE_LOGIN_URL, self.client, HTTPStatus.OK),
-            (self.PAGE_LOGOUT_URL, self.client, HTTPStatus.OK),
-            (self.PAGE_SINGUP_URL, self.client, HTTPStatus.OK),
-            (self.PAGE_ADD_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_SUCCESS_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_LIST_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_DETAIL_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_DELETE_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_EDIT_URL, self.author_client, HTTPStatus.OK),
-            (self.PAGE_DETAIL_URL, self.reader_client, HTTPStatus.NOT_FOUND),
-            (self.PAGE_DELETE_URL, self.reader_client, HTTPStatus.NOT_FOUND),
-            (self.PAGE_EDIT_URL, self.reader_client, HTTPStatus.NOT_FOUND),
-            (self.PAGE_ADD_URL, self.client, HTTPStatus.FOUND),
-            (self.PAGE_SUCCESS_URL, self.client, HTTPStatus.FOUND),
-            (self.PAGE_LIST_URL, self.client, HTTPStatus.FOUND),
-            (self.PAGE_DETAIL_URL, self.client, HTTPStatus.FOUND),
-            (self.PAGE_DELETE_URL, self.client, HTTPStatus.FOUND),
-            (self.PAGE_EDIT_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.HOMEPAGE_URL, self.client, HTTPStatus.OK),
+            (self.urls.PAGE_LOGIN_URL, self.client, HTTPStatus.OK),
+            (self.urls.PAGE_LOGOUT_URL, self.client, HTTPStatus.OK),
+            (self.urls.PAGE_SINGUP_URL, self.client, HTTPStatus.OK),
+            (self.urls.PAGE_ADD_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_SUCCESS_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_LIST_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_DETAIL_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_DELETE_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_EDIT_URL, self.author_client, HTTPStatus.OK),
+            (self.urls.PAGE_DETAIL_URL, self.reader_client, HTTPStatus.NOT_FOUND),
+            (self.urls.PAGE_DELETE_URL, self.reader_client, HTTPStatus.NOT_FOUND),
+            (self.urls.PAGE_EDIT_URL, self.reader_client, HTTPStatus.NOT_FOUND),
+            (self.urls.PAGE_ADD_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.PAGE_SUCCESS_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.PAGE_LIST_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.PAGE_DETAIL_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.PAGE_DELETE_URL, self.client, HTTPStatus.FOUND),
+            (self.urls.PAGE_EDIT_URL, self.client, HTTPStatus.FOUND),
         )
 
         for url, user, status in status_check_cases:
@@ -40,31 +40,31 @@ class TestRoutes(NotesListViewTest):
 
     def test_redirect_for_anonymous_client(self):
         """Тест перенаправления анонимного пользователя на страницу логина."""
-        login_url = self.PAGE_LOGIN_URL
+        login_url = self.urls.PAGE_LOGIN_URL
         redirect_cases = (
             (
-                self.PAGE_ADD_URL,
-                f'{login_url}?next={self.PAGE_ADD_URL}'
+                self.urls.PAGE_ADD_URL,
+                f'{login_url}?next={self.urls.PAGE_ADD_URL}'
             ),
             (
-                self.PAGE_EDIT_URL,
-                f'{login_url}?next={self.PAGE_EDIT_URL}'
+                self.urls.PAGE_EDIT_URL,
+                f'{login_url}?next={self.urls.PAGE_EDIT_URL}'
             ),
             (
-                self.PAGE_DELETE_URL,
-                f'{login_url}?next={self.PAGE_DELETE_URL}'
+                self.urls.PAGE_DELETE_URL,
+                f'{login_url}?next={self.urls.PAGE_DELETE_URL}'
             ),
             (
-                self.PAGE_LIST_URL,
-                f'{login_url}?next={self.PAGE_LIST_URL}'
+                self.urls.PAGE_LIST_URL,
+                f'{login_url}?next={self.urls.PAGE_LIST_URL}'
             ),
             (
-                self.PAGE_DETAIL_URL,
-                f'{login_url}?next={self.PAGE_DETAIL_URL}'
+                self.urls.PAGE_DETAIL_URL,
+                f'{login_url}?next={self.urls.PAGE_DETAIL_URL}'
             ),
             (
-                self.PAGE_SUCCESS_URL,
-                f'{login_url}?next={self.PAGE_SUCCESS_URL}'
+                self.urls.PAGE_SUCCESS_URL,
+                f'{login_url}?next={self.urls.PAGE_SUCCESS_URL}'
             ),
         )
         for url, expected_redirect_url in redirect_cases:
