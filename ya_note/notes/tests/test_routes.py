@@ -23,15 +23,27 @@ class TestRoutes(NotesListViewTest):
             (self.urls.PAGE_DETAIL_URL, self.author_client, HTTPStatus.OK),
             (self.urls.PAGE_DELETE_URL, self.author_client, HTTPStatus.OK),
             (self.urls.PAGE_EDIT_URL, self.author_client, HTTPStatus.OK),
-            (self.urls.PAGE_DETAIL_URL, self.reader_client, HTTPStatus.NOT_FOUND),
-            (self.urls.PAGE_DELETE_URL, self.reader_client, HTTPStatus.NOT_FOUND),
-            (self.urls.PAGE_EDIT_URL, self.reader_client, HTTPStatus.NOT_FOUND),
             (self.urls.PAGE_ADD_URL, self.client, HTTPStatus.FOUND),
             (self.urls.PAGE_SUCCESS_URL, self.client, HTTPStatus.FOUND),
             (self.urls.PAGE_LIST_URL, self.client, HTTPStatus.FOUND),
             (self.urls.PAGE_DETAIL_URL, self.client, HTTPStatus.FOUND),
             (self.urls.PAGE_DELETE_URL, self.client, HTTPStatus.FOUND),
             (self.urls.PAGE_EDIT_URL, self.client, HTTPStatus.FOUND),
+            (
+                self.urls.PAGE_DETAIL_URL,
+                self.reader_client,
+                HTTPStatus.NOT_FOUND
+            ),
+            (
+                self.urls.PAGE_DELETE_URL,
+                self.reader_client,
+                HTTPStatus.NOT_FOUND
+            ),
+            (
+                self.urls.PAGE_EDIT_URL,
+                self.reader_client,
+                HTTPStatus.NOT_FOUND
+            ),
         )
 
         for url, user, status in status_check_cases:
