@@ -2,11 +2,7 @@ from notes.forms import NoteForm
 from .base_module import (
     NotesListViewTest,
     PAGE_ADD_URL,
-    PAGE_SINGUP_URL,
     PAGE_LIST_URL,
-    PAGE_LOGIN_URL,
-    PAGE_LOGOUT_URL,
-    PAGE_SUCCESS_URL
 )
 
 
