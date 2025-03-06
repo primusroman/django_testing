@@ -6,21 +6,36 @@ from notes.models import Note
 
 User = get_user_model()
 
+# URL, не зависящие от slug заметок.
+HOMEPAGE_URL = reverse('notes:home')
+PAGE_LOGIN_URL = reverse('users:login')
+PAGE_LOGOUT_URL = reverse('users:logout')
+PAGE_SINGUP_URL = reverse('users:signup')
+PAGE_ADD_URL = reverse('notes:add')
+PAGE_LIST_URL = reverse('notes:list')
+PAGE_SUCCESS_URL = reverse('notes:success')
+REDIRECT_SUCCESS_URL = f'{PAGE_LOGIN_URL}?next={PAGE_SUCCESS_URL}'
+REDIRECT_LIST_URL = f'{PAGE_LOGIN_URL}?next={PAGE_LIST_URL}'
+REDIRECT_ADD_URL = f'{PAGE_LOGIN_URL}?next={PAGE_ADD_URL}'
 
-class UrlsForTests:
-    """Класс для хранения всех URL."""
 
-    def __init__(self, note_slug):
-        self.HOMEPAGE_URL = reverse('notes:home')
-        self.PAGE_LOGIN_URL = reverse('users:login')
-        self.PAGE_LOGOUT_URL = reverse('users:logout')
-        self.PAGE_SINGUP_URL = reverse('users:signup')
-        self.PAGE_ADD_URL = reverse('notes:add')
-        self.PAGE_LIST_URL = reverse('notes:list')
-        self.PAGE_SUCCESS_URL = reverse('notes:success')
-        self.PAGE_EDIT_URL = reverse('notes:edit', args=(note_slug,))
-        self.PAGE_DETAIL_URL = reverse('notes:detail', args=(note_slug,))
-        self.PAGE_DELETE_URL = reverse('notes:delete', args=(note_slug,))
+def generate_note_urls(note_slug):
+    """Функция для генерации URL, зависящих от slug заметок."""
+    PAGE_EDIT_URL = reverse('notes:edit', args=(note_slug,))
+    PAGE_DETAIL_URL = reverse('notes:detail', args=(note_slug,))
+    PAGE_DELETE_URL = reverse('notes:delete', args=(note_slug,))
+    REDIRECT_DELETE_URL = f'{PAGE_LOGIN_URL}?next={PAGE_DELETE_URL}'
+    REDIRECT_DETAIL_URL = f'{PAGE_LOGIN_URL}?next={PAGE_DETAIL_URL}'
+    REDIRECT_EDIT_URL = f'{PAGE_LOGIN_URL}?next={PAGE_EDIT_URL}'
+
+    return {
+        'PAGE_EDIT_URL': PAGE_EDIT_URL,
+        'PAGE_DETAIL_URL': PAGE_DETAIL_URL,
+        'PAGE_DELETE_URL': PAGE_DELETE_URL,
+        'REDIRECT_DELETE_URL': REDIRECT_DELETE_URL,
+        'REDIRECT_DETAIL_URL': REDIRECT_DETAIL_URL,
+        'REDIRECT_EDIT_URL': REDIRECT_EDIT_URL,
+    }
 
 
 class NotesListViewTest(TestCase):
@@ -48,18 +63,7 @@ class NotesListViewTest(TestCase):
             author=cls.author
         )
 
-        cls.urls = UrlsForTests(cls.note.slug)
-
-        # cls.HOMEPAGE_URL = reverse('notes:home')
-        # cls.PAGE_LOGIN_URL = reverse('users:login')
-        # cls.PAGE_LOGOUT_URL = reverse('users:logout')
-        # cls.PAGE_SINGUP_URL = reverse('users:signup')
-        # cls.PAGE_ADD_URL = reverse('notes:add')
-        # cls.PAGE_LIST_URL = reverse('notes:list')
-        # cls.PAGE_SUCCESS_URL = reverse('notes:success')
-        # cls.PAGE_EDIT_URL = reverse('notes:edit', args=(cls.note.slug,))
-        # cls.PAGE_DETAIL_URL = reverse('notes:detail', args=(cls.note.slug,))
-        # cls.PAGE_DELETE_URL = reverse('notes:delete', args=(cls.note.slug,))
+        cls.urls = generate_note_urls(cls.note.slug)
 
         cls.form_data = {
             'title': 'Test Title',

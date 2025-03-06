@@ -14,7 +14,7 @@ FORM_DATA = {
     'text': 'Новый текст коммента'
 }
 
-BAD_TEXTS = [
+BAD_TEXT_FORMS = [
     {
         'text': f'Какой-то текст, {word}, еще текст'
     } for word in BAD_WORDS
@@ -41,7 +41,7 @@ def test_user_can_create_comment(
 
 
 @pytest.mark.parametrize(
-    'bad_texts', BAD_TEXTS,
+    'bad_texts', BAD_TEXT_FORMS,
 )
 def test_user_cant_use_bad_words(
         author_client, detail_url, bad_texts
@@ -72,6 +72,7 @@ def test_user_cant_delete_comment_of_another_user(
 ):
     response = not_author_client.delete(delete_comment_url)
     assert response.status_code == HTTPStatus.NOT_FOUND
+    assert Comment.objects.filter(pk=comment.id).exists()
     current_comment = Comment.objects.get(pk=comment.id)
     assert current_comment.news == comment.news
     assert current_comment.author == comment.author
