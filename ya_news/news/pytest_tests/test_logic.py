@@ -41,13 +41,13 @@ def test_user_can_create_comment(
 
 
 @pytest.mark.parametrize(
-    'bad_texts', BAD_TEXT_FORMS,
+    'bad_text_forms', BAD_TEXT_FORMS,
 )
 def test_user_cant_use_bad_words(
-        author_client, detail_url, bad_texts
+        author_client, detail_url, bad_text_forms
 ):
     response = author_client.post(
-        detail_url, data=bad_texts
+        detail_url, data=bad_text_forms
     )
     # Проверяем, есть ли в ответе ошибка формы.
     assertFormError(

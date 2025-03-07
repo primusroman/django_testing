@@ -13,7 +13,13 @@ from .base_module import (
     PAGE_SUCCESS_URL,
     REDIRECT_SUCCESS_URL,
     REDIRECT_LIST_URL,
-    REDIRECT_ADD_URL
+    REDIRECT_ADD_URL,
+    PAGE_EDIT_URL,
+    PAGE_DETAIL_URL,
+    PAGE_DELETE_URL,
+    REDIRECT_EDIT_URL,
+    REDIRECT_DELETE_URL,
+    REDIRECT_DETAIL_URL
 )
 
 User = get_user_model()
@@ -35,24 +41,24 @@ class TestRoutes(NotesListViewTest):
             (PAGE_ADD_URL, self.client, HTTPStatus.FOUND),
             (PAGE_SUCCESS_URL, self.client, HTTPStatus.FOUND),
             (PAGE_LIST_URL, self.client, HTTPStatus.FOUND),
-            (self.urls['PAGE_DETAIL_URL'], self.author_client, HTTPStatus.OK),
-            (self.urls['PAGE_DELETE_URL'], self.author_client, HTTPStatus.OK),
-            (self.urls['PAGE_EDIT_URL'], self.author_client, HTTPStatus.OK),
-            (self.urls['PAGE_DETAIL_URL'], self.client, HTTPStatus.FOUND),
-            (self.urls['PAGE_DELETE_URL'], self.client, HTTPStatus.FOUND),
-            (self.urls['PAGE_EDIT_URL'], self.client, HTTPStatus.FOUND),
+            (PAGE_DETAIL_URL, self.author_client, HTTPStatus.OK),
+            (PAGE_DELETE_URL, self.author_client, HTTPStatus.OK),
+            (PAGE_EDIT_URL, self.author_client, HTTPStatus.OK),
+            (PAGE_DETAIL_URL, self.client, HTTPStatus.FOUND),
+            (PAGE_DELETE_URL, self.client, HTTPStatus.FOUND),
+            (PAGE_EDIT_URL, self.client, HTTPStatus.FOUND),
             (
-                self.urls['PAGE_DETAIL_URL'],
+                PAGE_DETAIL_URL,
                 self.reader_client,
                 HTTPStatus.NOT_FOUND
             ),
             (
-                self.urls['PAGE_DELETE_URL'],
+                PAGE_DELETE_URL,
                 self.reader_client,
                 HTTPStatus.NOT_FOUND
             ),
             (
-                self.urls['PAGE_EDIT_URL'],
+                PAGE_EDIT_URL,
                 self.reader_client,
                 HTTPStatus.NOT_FOUND
             ),
@@ -70,20 +76,20 @@ class TestRoutes(NotesListViewTest):
                 REDIRECT_ADD_URL
             ),
             (
-                self.urls['PAGE_EDIT_URL'],
-                self.urls['REDIRECT_EDIT_URL']
+                PAGE_EDIT_URL,
+                REDIRECT_EDIT_URL
             ),
             (
-                self.urls['PAGE_DELETE_URL'],
-                self.urls['REDIRECT_DELETE_URL']
+                PAGE_DELETE_URL,
+                REDIRECT_DELETE_URL
             ),
             (
                 PAGE_LIST_URL,
                 REDIRECT_LIST_URL
             ),
             (
-                self.urls['PAGE_DETAIL_URL'],
-                self.urls['REDIRECT_DETAIL_URL']
+                PAGE_DETAIL_URL,
+                REDIRECT_DETAIL_URL
             ),
             (
                 PAGE_SUCCESS_URL,
