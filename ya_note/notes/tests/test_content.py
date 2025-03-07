@@ -14,7 +14,7 @@ class NotesListViewTestq(NotesListViewTest):
         response = self.author_client.get(PAGE_LIST_URL)
         notes = response.context['object_list']
         self.assertIn(self.note, notes)
-        note = notes.filter(pk=self.note.pk).first()
+        note = notes.get(pk=self.note.pk)
         self.assertEqual(note.title, self.note.title)
         self.assertEqual(note.text, self.note.text)
         self.assertEqual(note.author, self.note.author)

@@ -23,10 +23,9 @@ class NoteCreationTest(NotesListViewTest):
             PAGE_ADD_URL, self.form_data
         )
         self.assertRedirects(response, PAGE_SUCCESS_URL)
-        # Проверяем, что заметок на 1 больше.
-        new_notes_id = set(Note.objects.all()) - notes
-        self.assertEqual(len(new_notes_id), 1)
-        created_note = new_notes_id.pop()
+        new_notes = set(Note.objects.all()) - notes
+        self.assertEqual(len(new_notes), 1)
+        created_note = new_notes.pop()
         self.assertEqual(created_note.title, self.form_data['title'])
         self.assertEqual(created_note.text, self.form_data['text'])
         self.assertEqual(created_note.slug, self.form_data['slug'])
@@ -34,10 +33,8 @@ class NoteCreationTest(NotesListViewTest):
 
     def test_anonymous_user_cannot_create_note(self):
         """Анонимный пользователь не может создать заметку."""
-        # Получаем список id до попытки создать заметку.
         notes = set(Note.objects.all())
         self.client.post(PAGE_ADD_URL, self.form_data)
-        # Получаем список id после попытки создать заметку.
         self.assertEqual(notes, set(Note.objects.all()))
 
     def test_cannot_create_note_with_duplicate_slug(self):
@@ -59,9 +56,9 @@ class NoteCreationTest(NotesListViewTest):
         # Отправляем POST-запрос для создания заметки.
         response = self.author_client.post(PAGE_ADD_URL, self.form_data)
         self.assertRedirects(response, PAGE_SUCCESS_URL)
-        new_notes_id = set(Note.objects.all()) - notes
-        self.assertEqual(len(new_notes_id), 1)
-        created_note = new_notes_id.pop()
+        new_notes = set(Note.objects.all()) - notes
+        self.assertEqual(len(new_notes), 1)
+        created_note = new_notes.pop()
         self.assertEqual(created_note.slug, slugify(self.form_data['title']))
         self.assertEqual(created_note.title, self.form_data['title'])
         self.assertEqual(created_note.text, self.form_data['text'])
@@ -75,7 +72,6 @@ class NoteCreationTest(NotesListViewTest):
         self.assertRedirects(response, PAGE_SUCCESS_URL)
         # Получаем обновленную заметку из базы данных
         note = Note.objects.get(id=self.note.id)
-        # Проверяем, что данные были успешно обновлены
         self.assertEqual(note.title, self.form_data['title'])
         self.assertEqual(note.text, self.form_data['text'])
         self.assertEqual(note.author, self.note.author)
@@ -105,8 +101,7 @@ class NoteCreationTest(NotesListViewTest):
         """Проверка: пользователь не может удалить чужие заметки."""
         response = self.reader_client.post(PAGE_DELETE_URL)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
-        note = Note.objects.filter(id=self.note.id).exists()
-        self.assertTrue(note)
+        self.assertTrue(Note.objects.filter(id=self.note.id).exists())
         original_note = Note.objects.get(id=self.note.id)
         self.assertEqual(original_note.title, self.note.title)
         self.assertEqual(original_note.text, self.note.text)
